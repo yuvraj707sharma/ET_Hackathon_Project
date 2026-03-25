@@ -252,6 +252,232 @@ FEATURES = {
 }
 ```
 
+## 🚨 Troubleshooting
+
+### Common Setup Issues
+
+#### 1. **ModuleNotFoundError: No module named 'plotly'** (or other modules)
+
+**Problem**: Missing dependencies not installed in virtual environment
+
+**Solution**:
+```bash
+# Activate virtual environment first
+# Windows
+venv\Scripts\activate
+# Linux/macOS
+source venv/bin/activate
+
+# Install missing package
+pip install plotly
+
+# Or reinstall all requirements
+pip install -r requirements.txt
+
+# For enhanced features
+pip install -r requirements_enhanced.txt
+```
+
+**Prevention**: Always use the automated setup scripts which handle all dependencies.
+
+#### 2. **Virtual Environment Issues**
+
+**Problem**: Commands not working or packages not found
+
+**Solution**:
+```bash
+# Check if virtual environment is activated
+# You should see (venv) in your terminal prompt
+
+# If not activated:
+# Windows
+venv\Scripts\activate
+# Linux/macOS
+source venv/bin/activate
+
+# Verify Python is using virtual environment
+which python  # Linux/macOS
+where python   # Windows
+```
+
+#### 3. **Streamlit Not Starting**
+
+**Problem**: `streamlit: command not found` or similar errors
+
+**Solution**:
+```bash
+# Ensure virtual environment is activated
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+
+# Install streamlit if missing
+pip install streamlit
+
+# Try running with python -m
+python -m streamlit run app.py
+```
+
+#### 4. **Port Already in Use**
+
+**Problem**: `Port 8501 is already in use`
+
+**Solution**:
+```bash
+# Use a different port
+streamlit run app.py --server.port 8502
+
+# Or kill existing streamlit processes
+# Windows
+taskkill /f /im streamlit.exe
+# Linux/macOS
+pkill -f streamlit
+```
+
+#### 5. **API Key Issues**
+
+**Problem**: LLM features not working or API errors
+
+**Solution**:
+```bash
+# Check if .env file exists and has API keys
+cat .env  # Linux/macOS
+type .env # Windows
+
+# Ensure GROQ_API_KEY is set (get from https://console.groq.com/)
+GROQ_API_KEY=your_actual_api_key_here
+
+# Test API connection
+python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('API Key loaded:', bool(os.getenv('GROQ_API_KEY')))"
+```
+
+#### 6. **Import Errors from Custom Modules**
+
+**Problem**: `ModuleNotFoundError: No module named 'concierge'`
+
+**Solution**:
+```bash
+# Ensure you're in the project root directory
+cd et-concierge
+
+# Add current directory to Python path
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"  # Linux/macOS
+set PYTHONPATH=%PYTHONPATH%;%CD%          # Windows
+
+# Or run from project root
+python -m streamlit run app.py
+```
+
+#### 7. **Database Connection Issues**
+
+**Problem**: Redis/PostgreSQL connection errors
+
+**Solution**:
+```bash
+# Check if databases are running (if using Docker)
+docker-compose -f docker-compose.dev.yml ps
+
+# Start databases if stopped
+docker-compose -f docker-compose.dev.yml up -d
+
+# Or disable database features temporarily
+# In .env file:
+USE_MOCK_DATA=true
+DEBUG_MODE=true
+```
+
+#### 8. **Permission Errors**
+
+**Problem**: Permission denied errors on Linux/macOS
+
+**Solution**:
+```bash
+# Make setup script executable
+chmod +x setup.sh
+
+# Fix file permissions
+chmod -R 755 .
+
+# Run with proper permissions
+sudo ./setup.sh  # Only if necessary
+```
+
+#### 9. **Python Version Issues**
+
+**Problem**: Compatibility errors or features not working
+
+**Solution**:
+```bash
+# Check Python version
+python --version
+
+# Ensure Python 3.8+ is installed
+# If using older version, install Python 3.8+
+# Then recreate virtual environment
+rm -rf venv  # Linux/macOS
+rmdir /s venv  # Windows
+
+python3.8 -m venv venv  # Use specific version
+```
+
+#### 10. **Memory/Performance Issues**
+
+**Problem**: App running slowly or crashing
+
+**Solution**:
+```bash
+# Increase memory limit
+streamlit run app.py --server.maxUploadSize 200
+
+# Disable heavy features temporarily
+# In .env:
+USE_MOCK_DATA=true
+ENABLE_ANIMATIONS=false
+
+# Monitor resource usage
+top  # Linux/macOS
+Task Manager  # Windows
+```
+
+### Quick Diagnostic Commands
+
+```bash
+# Check Python and pip versions
+python --version && pip --version
+
+# Verify virtual environment
+which python && which pip
+
+# List installed packages
+pip list
+
+# Test core imports
+python -c "import streamlit, plotly, pandas, numpy; print('Core packages OK')"
+
+# Test application imports
+python -c "from concierge.agents import ConciergeOrchestrator; print('App imports OK')"
+
+# Check environment variables
+python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('Env loaded:', bool(os.getenv('GROQ_API_KEY')))"
+```
+
+### Getting Help
+
+If you're still experiencing issues:
+
+1. **Check the logs**: Look for error messages in the terminal
+2. **Use automated setup**: Run `setup.sh` (Linux/macOS) or `setup.bat` (Windows)
+3. **Clean installation**: Delete `venv` folder and start fresh
+4. **Check system requirements**: Ensure Python 3.8+, sufficient RAM (4GB+)
+5. **Report issues**: Create a GitHub issue with error details and system info
+
+### System Requirements
+
+- **Python**: 3.8 or higher
+- **RAM**: 4GB minimum, 8GB recommended
+- **Storage**: 2GB free space
+- **OS**: Windows 10+, macOS 10.14+, Ubuntu 18.04+
+- **Network**: Internet connection for API calls and package installation
+
 ## 🧪 Testing
 
 Run the comprehensive test suite:
