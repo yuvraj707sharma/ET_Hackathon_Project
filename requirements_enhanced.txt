@@ -1,7 +1,92 @@
-streamlit>=1.35.0
-pydantic>=2.7.0
-openai>=1.30.0
-python-dotenv>=1.0.1
-tenacity>=8.3.0
-plotly>=5.15.0
-pandas>=2.0.0
+# ET AI Concierge - Enhanced Dependencies
+# Phase 2 & 3 Features
+
+# Core dependencies (from requirements.txt)
+streamlit>=1.28.0
+pandas>=1.5.0
+numpy>=1.24.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+groq>=0.4.0
+
+# Phase 2: Cloudflare AI & Market Intelligence
+aiohttp>=3.8.0
+asyncio-throttle>=1.0.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+selenium>=4.15.0  # For complex web scraping
+webdriver-manager>=4.0.0
+
+# Phase 2: Enhanced Analytics
+plotly>=5.17.0
+dash>=2.14.0
+redis>=5.0.0
+psycopg2-binary>=2.9.0  # PostgreSQL support
+sqlalchemy>=2.0.0
+
+# Phase 3: Voice Interface
+speechrecognition>=3.10.0
+pyttsx3>=2.90
+pyaudio>=0.2.11  # For microphone input
+azure-cognitiveservices-speech>=1.34.0
+googletrans==4.0.0rc1
+
+# Phase 3: WhatsApp Integration
+twilio>=8.10.0
+flask>=2.3.0  # For webhook handling
+gunicorn>=21.2.0  # Production WSGI server
+
+# Phase 3: Multi-language Support
+langdetect>=1.0.9
+polyglot>=16.7.4  # Advanced language processing
+icu>=2.11  # Unicode support
+
+# Phase 4: Advanced ML & AI
+scikit-learn>=1.3.0
+tensorflow>=2.13.0
+torch>=2.1.0
+transformers>=4.35.0
+sentence-transformers>=2.2.0
+
+# Phase 4: Enterprise Features
+celery>=5.3.0  # Background task processing
+flower>=2.0.0  # Celery monitoring
+prometheus-client>=0.19.0  # Metrics collection
+grafana-api>=1.0.3  # Dashboard integration
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.9.0  # Code formatting
+flake8>=6.1.0  # Linting
+mypy>=1.6.0  # Type checking
+
+# Security & Compliance
+cryptography>=41.0.0
+pyjwt>=2.8.0
+bcrypt>=4.0.0
+python-jose>=3.3.0
+
+# Monitoring & Logging
+structlog>=23.2.0
+sentry-sdk>=1.38.0
+elastic-apm>=6.20.0
+
+# Cloud & Deployment
+boto3>=1.29.0  # AWS SDK
+google-cloud-storage>=2.10.0  # GCP SDK
+azure-storage-blob>=12.19.0  # Azure SDK
+docker>=6.1.0
+
+# API & Integration
+fastapi>=0.104.0  # Alternative to Streamlit for APIs
+uvicorn>=0.24.0  # ASGI server
+httpx>=0.25.0  # Async HTTP client
+websockets>=12.0  # Real-time communication
+
+# Data Processing
+openpyxl>=3.1.0  # Excel file handling
+python-multipart>=0.0.6  # File upload handling
+pillow>=10.1.0  # Image processing
+reportlab>=4.0.0  # PDF generation
