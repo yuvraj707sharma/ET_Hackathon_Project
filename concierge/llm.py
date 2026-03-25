@@ -84,7 +84,10 @@ def best_effort_chat_completion_text(model: str, system: str, user: str) -> str 
     Non-fatal wrapper: returns None if LLM is unavailable or errors.
     """
     try:
-        return chat_completion_text(model=model, system=system, user=user).strip()
-    except Exception:
+        result = chat_completion_text(model=model, system=system, user=user).strip()
+        print(f"DEBUG: LLM success, result length: {len(result)}")
+        return result
+    except Exception as e:
+        print(f"DEBUG: LLM failed with error: {e}")
         return None
 

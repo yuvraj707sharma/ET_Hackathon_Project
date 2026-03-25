@@ -186,7 +186,7 @@ def run_concierge_journey(
         if os.getenv("OPENAI_API_KEY"):
             llm_model = os.getenv("CONCIERGE_LLM_MODEL", "gpt-4o-mini")
         elif os.getenv("GROQ_API_KEY"):
-            llm_model = os.getenv("GROQ_LLM_MODEL", "llama3-8b-8192")
+            llm_model = os.getenv("GROQ_LLM_MODEL", "llama-3.1-8b-instant")
         else:
             llm_model = "gpt-4o-mini"
 

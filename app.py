@@ -3,6 +3,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
 
 from concierge.agents import run_concierge_journey
@@ -19,8 +22,13 @@ catalog_path = Path(__file__).parent / "data" / "product_catalog.json"
 catalog = load_product_catalog(catalog_path)
 
 openai_key = os.getenv("OPENAI_API_KEY")
-if not openai_key:
-    st.sidebar.info("`OPENAI_API_KEY` not set. Demo will still work using deterministic concierge logic.")
+groq_key = os.getenv("GROQ_API_KEY")
+if not openai_key and not groq_key:
+    st.sidebar.info("No LLM API key set (`OPENAI_API_KEY` or `GROQ_API_KEY`). Demo will still work using deterministic concierge logic.")
+elif groq_key:
+    st.sidebar.success("✅ Groq API key detected. LLM-enhanced responses enabled.")
+elif openai_key:
+    st.sidebar.success("✅ OpenAI API key detected. LLM-enhanced responses enabled.")
 
 with st.sidebar:
     st.header("Scenario Pack Runner")
