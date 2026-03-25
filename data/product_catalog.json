@@ -1,0 +1,75 @@
+[
+  {
+    "id": "sip_starting_first_sip_125800143",
+    "title": "Starting your first SIP? Here’s an expert guide to choosing the right mutual fund",
+    "productType": "article",
+    "categoryTags": ["SIP", "beginner", "mutual-funds", "goal-based"],
+    "audienceHint": "First-time investor / confused SIP starter",
+    "url": "https://economictimes.indiatimes.com/mf/analysis/starting-your-first-sip-heres-an-expert-guide-to-choosing-the-right-mutual-fund/articleshow/125800143.cms?from=mdr",
+    "lastUpdatedISO": "2025-12-06"
+  },
+  {
+    "id": "masterclass_mutual_funds_workshop",
+    "title": "How to Choose the Right Mutual Funds & ETFs | Join Free Masterclass with Economic Times",
+    "productType": "masterclass",
+    "categoryTags": ["beginner", "mutual-funds", "ETLearn", "workshop"],
+    "audienceHint": "New investor wants a guided 3-hour workshop",
+    "url": "https://economictimes.indiatimes.com/masterclass/mutual-funds-workshop",
+    "lastUpdatedISO": null
+  },
+  {
+    "id": "prime_sips_thriving_124702009",
+    "title": "SIPs are thriving, but are they rewarding investors the way they used to?",
+    "productType": "prime_article",
+    "categoryTags": ["SIP", "performance", "beginner", "ETPrime"],
+    "audienceHint": "Lapsed/unsure investor who needs reassurance with data",
+    "url": "https://economictimes.indiatimes.com/prime/money-and-markets/sips-are-thriving-but-are-they-rewarding-investors-the-way-they-used-to/primearticleshow/124702009.cms?from=mdr",
+    "lastUpdatedISO": "2025-10-21"
+  },
+  {
+    "id": "prime_small_large_caps_129663182",
+    "title": "Small- or large-cap stocks: What should you bet on as markets fall?",
+    "productType": "prime_article",
+    "categoryTags": ["small-cap", "mid-cap", "ETPrime", "persona_reengage"],
+    "audienceHint": "Small-cap investor planning next steps during volatility",
+    "url": "https://economictimes.indiatimes.com/prime/money-and-markets/small-or-large-cap-stocks-what-should-you-bet-on-as-markets-fall/primearticleshow/129663182.cms?from=mdr",
+    "lastUpdatedISO": "2026-03-19"
+  },
+  {
+    "id": "prime_volatile_world_smallcap_121274865",
+    "title": "How to effectively navigate the volatile world of small-cap investment",
+    "productType": "prime_article",
+    "categoryTags": ["small-cap", "risk", "ETPrime"],
+    "audienceHint": "Prime user who attended small-cap sessions previously",
+    "url": "https://economictimes.indiatimes.com/prime/money-and-markets/how-to-effectively-navigate-the-volatile-world-of-small-cap-investment/primearticleshow/121274865.cms?from=mdr",
+    "lastUpdatedISO": "2025-05-20"
+  },
+  {
+    "id": "etmarkets_pms_talk_small_mid_118239566",
+    "title": "ETMarkets PMS Talk: Focus on small & midcaps to build multibaggers over time, Arpit Agrawal decodes investment strategy",
+    "productType": "article",
+    "categoryTags": ["small-cap", "mid-cap", "PMS", "expert-view"],
+    "audienceHint": "Small/midcap deep-dive content",
+    "url": "https://economictimes.indiatimes.com/markets/expert-view/etmarkets-pms-talk-focus-on-small-midcaps-to-build-multibaggers-over-time-arpit-agrawal-decodes-investment-strategy/articleshow/118239566.cms?from=mdr",
+    "lastUpdatedISO": "2025-02-17"
+  },
+  {
+    "id": "wealth_home_loan_interest_rates_129646744",
+    "title": "Lowest home loan interest rates: SBI vs HDFC Bank vs ICICI Bank vs Canara Bank; which bank offers lowest EMI; top bank rates compared",
+    "productType": "article",
+    "categoryTags": ["home-loan", "EMI", "home-buyer", "ETMoney"],
+    "audienceHint": "Life-event home purchase / home-loan shopping intent",
+    "url": "https://economictimes.indiatimes.com/wealth/borrow/lowest-home-loan-interest-rates-sbi-vs-hdfc-bank-vs-icici-bank-vs-canara-bank-which-bank-offers-lowest-emi-top-bank-rates-compared/articleshow/129646744.cms",
+    "lastUpdatedISO": "2026-03-18"
+  },
+  {
+    "id": "widget_home_loan_emi_calculator",
+    "title": "Home Loan Calculator: Home loan EMI calculator",
+    "productType": "tool",
+    "categoryTags": ["home-loan", "EMI", "calculator", "ETMoney"],
+    "audienceHint": "Quick estimate to support next action",
+    "url": "https://widget.economictimes.indiatimes.com/wealth/calculators/home-loan-calculator",
+    "lastUpdatedISO": null
+  }
+]
+
