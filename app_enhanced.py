@@ -70,9 +70,9 @@ with st.sidebar:
         
         col1, col2 = st.columns(2)
         with col1:
-            run_btn = st.button("▶️ Run Journey", type="primary", use_container_width=True)
+            run_btn = st.button("▶️ Run Journey", type="primary", width='stretch')
         with col2:
-            run_all_btn = st.button("🎬 Run All", use_container_width=True)
+            run_all_btn = st.button("🎬 Run All", width='stretch')
         
         # Advanced Options
         with st.expander("🔧 Advanced Options"):
@@ -201,7 +201,7 @@ elif page == "📊 Analytics Dashboard":
         fig.add_trace(go.Bar(name='With AI Concierge', x=completion_data['Scenario'], y=completion_data['Completion Rate']))
         fig.add_trace(go.Bar(name='Baseline', x=completion_data['Scenario'], y=completion_data['Baseline']))
         fig.update_layout(barmode='group', title="Journey Completion Rates")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
     
     with col2:
         st.markdown("### ⏱️ Time to Value")
@@ -216,7 +216,7 @@ elif page == "📊 Analytics Dashboard":
         fig.add_trace(go.Scatter(x=time_data['Stage'], y=time_data['Before (min)'], name='Before AI', mode='lines+markers'))
         fig.add_trace(go.Scatter(x=time_data['Stage'], y=time_data['After (min)'], name='With AI', mode='lines+markers'))
         fig.update_layout(title="User Journey Time Reduction")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
     
     # Detailed Metrics
     st.markdown("### 📋 Detailed Metrics")
@@ -261,7 +261,7 @@ elif page == "⚙️ Admin Panel":
                 'Updated': item.lastUpdatedISO or 'N/A'
             })
         
-        st.dataframe(catalog_df, use_container_width=True)
+        st.dataframe(catalog_df, width='stretch')
     
     with tab2:
         st.markdown("### 🤖 AI Model Configuration")
