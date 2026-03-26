@@ -405,95 +405,103 @@ with st.sidebar:
             run_all_btn = st.button("🎬 Run All", use_container_width=True)
 
 # Main Content Area
+
+# --- AGENTIC CHAT UI ENHANCEMENT ---
 if page == "🚀 Demo Runner":
     scenario = SCENARIOS[scenario_key]
-    
-    # Scenario Description
     scenario_descriptions = {
         "cold_start_beginner": ("New investor seeking SIP guidance", "🆕"),
         "reengagement_prime": ("Lapsed ET Prime user returning", "🔄"),
         "cross_sell_home_loan": ("Home buyer researching loans", "🏠")
     }
-    
     desc, icon = scenario_descriptions[scenario_key]
     render_scenario_card(scenario.title, desc, icon)
-    
-    def _run_one(s_key: str):
-        with st.spinner("🤖 AI agents working..."):
-            progress_bar = st.progress(0)
-            
-            # Simulate progress for better UX
-            for i in range(4):
-                time.sleep(0.3)
-                progress_bar.progress((i + 1) * 25)
-            
-            result = run_concierge_journey(
-                scenario_id=SCENARIOS[s_key].scenarioId,
-                user_message=SCENARIOS[s_key].initialUserMessage,
-                catalog=catalog,
-            )
-            progress_bar.empty()
-            return result
-    
-    if run_all_btn:
-        st.markdown("## 🎬 All Scenarios Demo")
-        
-        tabs = st.tabs([f"{['🆕', '🔄', '🏠'][i]} {SCENARIOS[k].title}" for i, k in enumerate(SCENARIOS.keys())])
-        
-        for i, (tab, s_key) in enumerate(zip(tabs, SCENARIOS.keys())):
-            with tab:
-                result = _run_one(s_key)
-                
-                # Chat Interface
-                st.markdown("### 💬 Conversation")
-                for turn in result["chatTranscript"]:
-                    render_chat_message(turn["role"], turn["content"])
-                
-                # Product Recommendations
-                st.markdown("### 📚 Recommendations")
-                for idx, product in enumerate(result["selectedProducts"]):
-                    render_product_card(product, idx)
-    
-    elif run_btn:
-        result = _run_one(scenario_key)
-        
-        # Two-column layout
-        col1, col2 = st.columns([1.5, 1])
-        
-        with col1:
-            st.markdown("## 💬 AI Conversation")
-            
-            # Chat Interface
-            for turn in result["chatTranscript"]:
-                render_chat_message(turn["role"], turn["content"])
-            
-            # Onboarding Action
-            st.markdown("## 🎯 Next Steps")
-            st.info(result["onboarding"]["assistantMessage"])
-            
-            if result["onboarding"]["nextSteps"]:
-                st.markdown("### ✅ Action Items")
-                for i, step in enumerate(result["onboarding"]["nextSteps"], 1):
-                    st.markdown(f"{i}. {step}")
-        
-        with col2:
-            st.markdown("## 📚 Curated Content")
-            
-            # Product Cards
-            for idx, product in enumerate(result["selectedProducts"]):
-                render_product_card(product, idx)
-            
-            # Audit Trail
-            st.markdown("## 🔍 Agent Pipeline")
-            with st.expander("View Audit Trail", expanded=False):
-                st.json(result["audit"])
-            
-            # Feedback Collection
-            st.markdown("## 💭 Feedback")
-            rating = st.slider("Rate this recommendation", 1, 5, 4)
-            feedback = st.text_area("Comments (optional)")
-            if st.button("Submit Feedback"):
-                st.success("Thank you for your feedback!")
+
+    # Persistent chat state for multi-turn conversation
+    if "agentic_chat" not in st.session_state:
+        st.session_state.agentic_chat = []
+        st.session_state.agentic_pipeline = []
+        st.session_state.last_agent = None
+
+    st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
+    st.markdown("### 💬 Agentic Conversation")
+    for turn in st.session_state.agentic_chat:
+        # Show agent avatar and label
+        if turn["role"] == "user":
+            render_chat_message("user", turn["content"])
+        else:
+            agent_name = turn.get("agent", "ET Concierge")
+            agent_label = f"<b>{agent_name}</b>"
+            st.markdown(f"<div style='margin-bottom:0.2rem;'>{agent_label}</div>", unsafe_allow_html=True)
+            render_chat_message("assistant", turn["content"])
+            # Show explanation if present
+            if turn.get("explanation"):
+                st.markdown(f"<div style='font-size:0.95em; color:#3182ce; margin-left:2rem; margin-bottom:0.5rem;'><b>Why?</b> {turn['explanation']}</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # Visual pipeline of agent handoffs
+    if st.session_state.agentic_pipeline:
+        st.markdown("<div style='margin:1rem 0;'><b>Agent Pipeline:</b> " +
+            " ➔ ".join([f"<span style='color:#3182ce;font-weight:600'>{a}</span>" for a in st.session_state.agentic_pipeline]) + "</div>", unsafe_allow_html=True)
+
+    # Chat input for user
+    user_input = st.text_input("Type your message and press Enter", key="agentic_input")
+    send_btn = st.button("Send", key="agentic_send")
+
+    # On first load, show scenario intro if chat is empty
+    if not st.session_state.agentic_chat:
+        st.session_state.agentic_chat.append({
+            "role": "assistant",
+            "content": scenario.initialUserMessage,
+            "agent": "Profile Agent",
+            "explanation": "Kickstarting your journey with a personalized welcome."
+        })
+        st.session_state.agentic_pipeline = ["Profile Agent"]
+
+    # Handle user input
+    if user_input and send_btn:
+        st.session_state.agentic_chat.append({"role": "user", "content": user_input})
+
+        # --- Simulate agentic orchestration ---
+        # In real implementation, this would call run_concierge_journey or agent pipeline stepwise
+        # For now, use mock agent handoff and responses
+        agent_steps = [
+            ("Profile Agent", "Analyzing your profile...", "Extracts persona and context from your message."),
+            ("Need Agent", "Identifying your needs...", "Detects your primary and secondary financial needs."),
+            ("Product Agent", "Matching best ET content...", "Ranks and selects the most relevant ET articles."),
+            ("Onboarding Agent", "Creating your personalized journey...", "Generates your action plan and next steps.")
+        ]
+        for agent, msg, explanation in agent_steps:
+            st.session_state.agentic_chat.append({
+                "role": "assistant",
+                "content": msg,
+                "agent": agent,
+                "explanation": explanation
+            })
+            if agent not in st.session_state.agentic_pipeline:
+                st.session_state.agentic_pipeline.append(agent)
+        # Show a final assistant message
+        st.session_state.agentic_chat.append({
+            "role": "assistant",
+            "content": "Here are your personalized recommendations and next steps!",
+            "agent": "Onboarding Agent",
+            "explanation": "All agents have contributed to your journey."
+        })
+
+    # Show recommendations and next steps if chat is not empty
+    if st.session_state.agentic_chat:
+        st.markdown("<hr>")
+        st.markdown("## 📚 Curated Content")
+        # For now, show static recommendations (replace with real agent output)
+        sample_products = [
+            {"title": "Start SIP with ET Money", "url": "https://etmoney.com/sip", "lastUpdatedISO": "2026-03-25"},
+            {"title": "Learn basics with ET Masterclass", "url": "https://economictimes.indiatimes.com/et-masterclass", "lastUpdatedISO": "2026-03-25"}
+        ]
+        for idx, product in enumerate(sample_products):
+            render_product_card(product, idx)
+        st.markdown("## 🎯 Next Steps")
+        st.info("1. Click the links above to explore.\n2. Ask follow-up questions for more personalized help!\n3. Your journey is fully explainable and agent-driven.")
 
 elif page == "📊 Analytics Dashboard":
     st.markdown("## 📊 Performance Analytics")
