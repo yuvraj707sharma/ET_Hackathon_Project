@@ -4,7 +4,7 @@
 [![Streamlit](https://img.shields.io/badge/streamlit-1.28+-red.svg)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Track 7 Winner** - ET AI Hackathon 2026  
+> **Track 7 Submission** — ET AI Hackathon 2026  
 > *Transforming Financial Literacy Through Intelligent Agent Orchestration*
 
 ## 🚀 Overview
@@ -587,18 +587,9 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🏆 Awards & Recognition
+## 📞 Contact
 
-- **🥇 Winner**: ET AI Hackathon 2026 - Track 7
-- **🏅 Innovation Award**: Best Multi-Agent System Implementation
-- **⭐ Judge's Choice**: Most Production-Ready Solution
-
-## 📞 Support & Contact
-
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- **Email**: [your-email@domain.com]
-- **LinkedIn**: [Your LinkedIn Profile]
+- **GitHub**: [Repository](https://github.com/your-repo)
 
 ## 🙏 Acknowledgments
 

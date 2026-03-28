@@ -43,6 +43,20 @@ class OnboardingAction(BaseModel):
 
 class AuditStep(BaseModel):
     stepName: str
+    agentName: str = "System"
     inputSummary: str
     outputJSON: dict[str, Any]
+    durationMs: float = 0.0
+    llmUsed: bool = False
+    error: str | None = None
 
+
+class AgentResult(BaseModel):
+    """Wrapper for individual agent step results with metadata."""
+    agentName: str
+    success: bool = True
+    data: dict[str, Any] = Field(default_factory=dict)
+    reasoning: str = ""
+    durationMs: float = 0.0
+    llmUsed: bool = False
+    error: str | None = None
