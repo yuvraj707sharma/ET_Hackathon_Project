@@ -1,51 +1,98 @@
-# ET AI Concierge (Track 7) - Architecture
+# ET AI Concierge (Track 7) — Architecture
 
 ## Goal
-Deliver a working prototype for **Track 7: AI Concierge for ET** that:
-1. Runs a multi-step journey without “thin UI over an LLM”.
-2. Completes the journey end-to-end: **profile extraction -> need identification -> product recommendation -> onboarding action**.
-3. Surfaces an **audit trail** so judges can see how the agent transformed state.
 
-## High-level system
-This prototype is a single Streamlit app:
-- `app.py`: UI + scenario runner + transcript rendering.
-- `concierge/agents.py`: orchestration (multi-agent, multi-step pipeline).
-- `concierge/catalog.py`: loads a real ET product catalog from `data/product_catalog.json`.
-- `concierge/scenarios.py`: scenario pack inputs (cold start, re-engagement, cross-sell).
+Deliver a truly agentic prototype for **Track 7: AI Concierge for ET** that:
+1. Runs a **multi-step autonomous journey** — not a thin UI over an LLM.
+2. Completes the full concierge pipeline: **profile → need → product → onboarding**.
+3. Surfaces a **per-agent audit trail** so judges can verify every decision.
+4. **Gracefully degrades** — works without any API key (deterministic mode).
 
-### Agentic pipeline (multi-step, stateful)
-On “Run agent journey”:
-1. **Profile extraction (Agent A)** (`_persona_from_scenario_id`)
-   - Input: scenario pack signals + initial user message.
-   - Output: `PersonaProfile` (persona bucket, stage label, goals, risk comfort).
-2. **Need identification (Agent B)** (`_need_from_scenario_id`)
-   - Input: scenario pack requirement.
-   - Output: `NeedIdentification` (primary need, secondary needs, 0-1 clarifying question).
-3. **Product recommendation (Agent C)** (`_rank_products_by_need`)
-   - Input: need + catalog tag index.
-   - Output: ranked top 2-3 items (deterministic scoring for judge reliability).
-4. **Onboarding action (Agent D)** (scenario-specific narrative)
-   - Input: persona, need, top recommendations.
-   - Output: `OnboardingAction` with a short assistant message + explicit next steps.
+## System Diagram
 
-## Auditability / Audit trail
-The UI shows an “Audit trail (judge-friendly)” section by rendering:
-- a list of `AuditStep` objects: each step has `stepName`, inputSummary, and `outputJSON`.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Streamlit UI (app.py)                    │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌───────────┐       │
+│  │ Scenario │  │  Chat    │  │  Audit   │  │ Analytics │       │
+│  │ Selector │  │ Interface│  │  Trail   │  │ Dashboard │       │
+│  └────┬─────┘  └────┬─────┘  └──────────┘  └───────────┘       │
+│       │              │                                           │
+│       ▼              ▼                                           │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │              Orchestrator (run_concierge_journey)         │   │
+│  │                                                           │   │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │   │
+│  │  │ Profile  │→ │  Need    │→ │ Product  │→ │Onboarding│ │   │
+│  │  │  Agent   │  │  Agent   │  │  Agent   │  │  Agent   │ │   │
+│  │  │ LLM/Rule │  │ LLM/Rule │  │ Tags+LLM │  │ LLM/Rule │ │   │
+│  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘ │   │
+│  │                                                           │   │
+│  │  Each agent: attempt LLM → fallback to deterministic      │   │
+│  │  Each agent: records timing, reasoning, errors            │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                         │                                        │
+│  ┌──────────────────────▼──────────────────────────────────┐    │
+│  │                    Data Layer                            │    │
+│  │  product_catalog.json (8 real ET URLs)                   │    │
+│  │  scenarios.py (3 hackathon scenario packs)               │    │
+│  │  llm.py (Groq/OpenAI via OpenAI SDK)                    │    │
+│  └──────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-This makes the pipeline auditable even if you don’t use an LLM key.
+## Agent Pipeline (4 autonomous steps)
 
-## Tool integrations
-### Real data used
-- A seeded catalog of **real ET URLs** (SIP beginner guidance, ET Prime small-cap content, home loan rate + EMI calculator widget) is stored in:
-  - `data/product_catalog.json`
+### Agent A: Profile Extraction (`run_profile_agent`)
+- **Input**: user message + scenario signals (age, history, intent)
+- **LLM mode**: sends message + signals → extracts stageLabel, goals, riskComfort via structured JSON
+- **Fallback**: deterministic persona lookup by scenario ID
+- **Output**: `PersonaProfile` (persona bucket, stage, goals, risk comfort)
 
-### Optional LLM integration
-The repo includes an OpenAI JSON helper (`concierge/llm.py`) intended for future upgrades.
-Current scoring/demo logic is deterministic to ensure the prototype always works during hackathon judging.
+### Agent B: Need Identification (`run_need_agent`)
+- **Input**: user message + extracted persona
+- **LLM mode**: analyzes message in persona context → identifies primaryNeed, secondaryNeeds, tone
+- **Fallback**: deterministic need mapping by scenario ID
+- **Output**: `NeedIdentification` (primary need, secondary needs, tone guidance, clarifying questions)
 
-## Error handling / graceful degradation
-- If `OPENAI_API_KEY` is missing, the app still works using deterministic concierge logic.
-- Recommendation logic is tag-driven; if the catalog is missing a tag, the UI can still render a fallback onboarding path (to be extended if needed).
+### Agent C: Product Recommendation (`run_product_agent`)
+- **Input**: need + ET product catalog
+- **Method**: deterministic tag-based scoring (reliable for judging) + optional LLM-enhanced reasons
+- **Output**: ranked top 2-3 `ProductRecommendationItem` with match scores and reasons
 
-## Compliance / guardrails
-- The onboarding includes a clear disclaimer distinguishing **general guidance** from **licensed financial advice**.
+### Agent D: Onboarding Action (`run_onboarding_agent`)
+- **Input**: persona, need, selected products
+- **LLM mode**: rewrites deterministic onboarding message with warmer, personalized tone
+- **Fallback**: scenario-specific structured message with product links + next steps
+- **Output**: `OnboardingAction` (assistant message, next steps, product IDs, disclaimer)
+
+## Error Handling & Graceful Degradation
+
+- Each agent wrapped in try/except — LLM failures fall back to deterministic rules
+- `AgentResult` model tracks: `success`, `error`, `durationMs`, `llmUsed`
+- No API key? App works fully in deterministic mode (sub-1ms per scenario)
+- Audit trail records errors so judges see recovery behavior
+
+## Auditability
+
+The UI shows a **judge-friendly audit trail** with:
+- Per-agent expandable sections showing input/output JSON
+- Timing per step (milliseconds)
+- LLM vs Deterministic label per agent
+- Pipeline stats (total steps, LLM steps used, total latency)
+
+## Tool Integrations
+
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| LLM | Groq (Llama 3.1 8B) via OpenAI SDK | Profile extraction, need analysis, tone rewriting |
+| Catalog | `product_catalog.json` | 8 real ET URLs (articles, masterclass, tools) |
+| UI | Streamlit | Demo runner, chat interface, analytics dashboard |
+| Deployment | Docker | Containerized deployment |
+
+## Compliance / Guardrails
+
+- Every onboarding message includes SEBI/RBI compliance disclaimer
+- Agent never provides licensed financial advice — only general guidance
+- No competitor platforms mentioned in responses
+- Non-pushy tone enforced via LLM system prompts and deterministic templates
